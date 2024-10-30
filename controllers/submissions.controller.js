@@ -1,4 +1,5 @@
 const { Submissions } = require("../models/submissions.model");
+const bot = require("./bot");
 
 const AddSubmissions = async (req, res, next) => {
   try {
@@ -12,15 +13,19 @@ const AddSubmissions = async (req, res, next) => {
     let officeText = officeNumber === 0 ? "" : `№${officeNumber} офис`;
 
     const newSubmission = new Submissions({
-      officeNumber,
+      officeNumber: officeText,
       userName,
       phoneNumber,
-      floorNumber,
-      applicationText,
+      floorNumber: applicationText,
       officeText,
     });
 
     await newSubmission.save();
+    await bot.telegram.sendMessage(
+      process.env.GROUP_CHAT_ID,
+      `Новая заявка:\nЭтаж: ${applicationText}, Офис: ${officeText}\nИмя: ${userName}\nТелефон: ${phoneNumber}`
+    );
+
     res
       .status(200)
       .json({ message: "Успешно оставили заявку !", newSubmission });
