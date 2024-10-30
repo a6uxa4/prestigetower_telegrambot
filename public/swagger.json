@@ -1,0 +1,49 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Submissions API",
+    "description": "API для управления заявками"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": ["http", "https"],
+  "paths": {
+    "/submissions": {
+      "post": {
+        "summary": "Добавить заявку",
+        "description": "Создать новую заявку",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "submissionsId": { "type": "integer" },
+                "officeNumber": { "type": "integer" },
+                "userName": { "type": "string" },
+                "phoneNumber": { "type": "string" }
+              },
+              "required": [
+                "submissionsId",
+                "officeNumber",
+                "userName",
+                "phoneNumber"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Заявка успешно добавлена"
+          },
+          "400": {
+            "description": "Ошибка валидации"
+          }
+        }
+      }
+    }
+  }
+}

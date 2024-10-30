@@ -1,13 +1,11 @@
 {
   "name": "pristije_tower",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "a6uxa4",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
