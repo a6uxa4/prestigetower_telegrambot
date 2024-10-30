@@ -5,12 +5,11 @@
     "title": "Submissions API",
     "description": "API для управления заявками"
   },
-  "host": "localhost:8080",
-  "basePath": "/",
   "schemes": ["http", "https"],
   "paths": {
     "/submissions": {
       "post": {
+        "tags": ["Submissions"],
         "summary": "Добавить заявку",
         "description": "Создать новую заявку",
         "parameters": [
