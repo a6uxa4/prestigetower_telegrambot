@@ -21,5 +21,5 @@ Before running the bot, ensure you have the following:
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/a6uxa4/prestigetower_telegrambot.git
    cd pristije_tower
