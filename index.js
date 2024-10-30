@@ -6,9 +6,23 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./public/swagger.json");
 
 const SubmissionsRoute = require("./routes/submissions.route");
+const initBot = require("./controllers/bot");
 
 dotenv.config();
 const app = express();
+const bot = initBot();
+
+global.bot = bot;
+
+// Запуск бота
+bot
+  .launch()
+  .then(() => {
+    console.log("Telegram bot is running...");
+  })
+  .catch((err) => {
+    console.error("Failed to start the bot:", err);
+  });
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -46,6 +60,10 @@ app.use((err, req, res, next) => {
     statusCode,
   });
 });
+
+// Graceful shutdown
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on port ${process.env.PORT}`);

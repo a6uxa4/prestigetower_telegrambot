@@ -1,5 +1,4 @@
 const { Submissions } = require("../models/submissions.model");
-const bot = require("./bot");
 
 const AddSubmissions = async (req, res, next) => {
   try {
@@ -9,8 +8,8 @@ const AddSubmissions = async (req, res, next) => {
       return res.status(400).json({ error: "Заполните все поля !" });
     }
 
-    let applicationText = floorNumber === 0 ? "Заявка" : `Этаж ${floorNumber}`;
-    let officeText = officeNumber === 0 ? "" : `№${officeNumber} офис`;
+    let applicationText = floorNumber === 0 ? "Не выбрал(а)" : floorNumber;
+    let officeText = officeNumber === 0 ? "Не выбрал(а)" : `№${officeNumber}`;
 
     const newSubmission = new Submissions({
       officeNumber: officeText,
@@ -21,10 +20,22 @@ const AddSubmissions = async (req, res, next) => {
     });
 
     await newSubmission.save();
-    await bot.telegram.sendMessage(
-      process.env.GROUP_CHAT_ID,
-      `Новая заявка:\nЭтаж: ${applicationText}, Офис: ${officeText}\nИмя: ${userName}\nТелефон: ${phoneNumber}`
-    );
+
+    try {
+      await global.bot.telegram.sendMessage(
+        process.env.GROUP_CHAT_ID,
+        `✅ Новая заявка:\n` +
+          `--------------------\n` +
+          ` 🏢 Этаж: ${applicationText} \n\n` +
+          ` 🏢 Офис: ${officeText} \n\n` +
+          ` 👤 Имя: ${userName} \n\n` +
+          ` 📞 Телефон: ${phoneNumber} \n` +
+          `--------------------`
+      );
+      console.log("Сообщение успешно отправлено в Telegram");
+    } catch (telegramError) {
+      console.error("Ошибка отправки сообщения в Telegram:", telegramError);
+    }
 
     res
       .status(200)
