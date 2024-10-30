@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const SubmissionsSchema = new mongoose.Schema(
   {
@@ -7,7 +8,11 @@ const SubmissionsSchema = new mongoose.Schema(
       unique: true,
     },
     officeNumber: {
-      type: Number,
+      type: String,
+      required: true,
+    },
+    floorNumber: {
+      type: String,
       required: true,
     },
     userName: {
@@ -21,6 +26,8 @@ const SubmissionsSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+SubmissionsSchema.plugin(AutoIncrement, { inc_field: "submissionsId" });
 
 const Submissions = mongoose.model("Submissions", SubmissionsSchema);
 
