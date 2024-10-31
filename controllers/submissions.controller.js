@@ -8,8 +8,8 @@ const AddSubmissions = async (req, res, next) => {
       return res.status(400).json({ error: "Заполните все поля !" });
     }
 
-    let applicationText = floorNumber === 0 ? "Не выбрал(а)" : floorNumber;
-    let officeText = officeNumber === 0 ? "Не выбрал(а)" : `№${officeNumber}`;
+    let applicationText = floorNumber === 0 ? "Консультация" : floorNumber;
+    let officeText = officeNumber === 0 ? "Консультация" : `№${officeNumber}`;
 
     const newSubmission = new Submissions({
       officeNumber: officeText,
