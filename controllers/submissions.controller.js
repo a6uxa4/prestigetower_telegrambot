@@ -41,7 +41,7 @@ const AddSubmissions = async (req, res, next) => {
 
     res
       .status(200)
-      .json({ message: "Успешно оставили заявку !", newSubmission });
+      .json({ message: "Ваша заявка принято !", newSubmission });
   } catch (error) {
     next(error);
   }
