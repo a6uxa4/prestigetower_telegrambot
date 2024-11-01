@@ -1,36 +1,59 @@
 const { Telegraf } = require("telegraf");
 const dotenv = require("dotenv");
-const { Submissions } = require("../models/submissions.model"); // Исправленный путь
+const { Submissions } = require("../models/submissions.model");
 
 dotenv.config();
 
 const initBot = () => {
   const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
-  // Команда start
+  const authorizedUsers = [];
+
   bot.command("start", (ctx) => {
     ctx.reply(
       "Привет! Я бот для управления заявками.\n\n" +
         "Доступные команды:\n" +
-        "/submissions - показать все заявки\n" +
+        "/submissions - показать все заявки (только после авторизации)\n" +
+        "/authorize - ввести код для доступа\n" +
         "/help - показать справку"
     );
   });
 
-  // Команда help
+  bot.command("authorize", (ctx) => {
+    const [_, code] = ctx.message.text.split(" ");
+    if (code === "7789") {
+      if (!authorizedUsers.includes(ctx.from.id)) {
+        authorizedUsers.push(ctx.from.id);
+        ctx.reply(
+          "Вы успешно авторизованы и теперь можете использовать команду /submissions."
+        );
+      } else {
+        ctx.reply("Вы уже авторизованы.");
+      }
+    } else {
+      ctx.reply("Неверный код. Пожалуйста, попробуйте снова.");
+    }
+  });
+
   bot.command("help", (ctx) => {
     ctx.reply(
       "Список команд:\n" +
-        "/submissions - показать все заявки\n" +
+        "/submissions - показать все заявки (только после авторизации)\n" +
+        "/authorize - ввести код для доступа\n" +
         "/help - показать это сообщение\n\n" +
         "При поступлении новой заявки я автоматически отправлю уведомление в группу."
     );
   });
 
   bot.command("submissions", async (ctx) => {
+    if (!authorizedUsers.includes(ctx.from.id)) {
+      return ctx.reply(
+        "❌ У вас нет доступа. Пожалуйста, используйте команду /authorize и введите код."
+      );
+    }
+
     try {
       const submissions = await Submissions.find({});
-
       if (submissions.length === 0) {
         await ctx.reply("Нет заявок.");
         return;
